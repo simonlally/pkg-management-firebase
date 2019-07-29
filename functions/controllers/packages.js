@@ -23,7 +23,7 @@ exports.newPackage = (request, response) => {
     const newPost = {
         body: request.body.body,
         userHandle: request.user.handle,
-        recievedBy: new Date().toISOString()
+        recievedAt: new Date().toISOString()
     };
 
     db.collection('packages').add(newPost)
