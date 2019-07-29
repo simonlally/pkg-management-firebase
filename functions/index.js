@@ -6,7 +6,7 @@ const { db } = require('./config/admin');
 
 const { getAllPosts, createPost, deletePost } = require('./controllers/posts');
 const { getAllPackages } = require('./controllers/packages');
-const { signup, login, signout, testing } = require('./controllers/users');
+const { signup, login, signout, isStaff, testing } = require('./controllers/users');
 const fireauth = require('./auth/fireauth');
 
 
@@ -24,6 +24,7 @@ app.post('/login', login);
 
 
 app.get('/logout', signout);
+app.get('/isstaff', isStaff);
 
  
 exports.api = functions.https.onRequest(app);

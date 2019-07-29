@@ -10,7 +10,7 @@ exports.getAllPosts = (request, response) => {
                     postID: doc.id,
                     body: doc.data().body,
                     userHandle: doc.data().userHandle,
-                    receivedBy: doc.data().recievedBy
+                    receivedAt: doc.data().receivedAt,
                 });
             });
             return response.json(posts);
@@ -22,7 +22,7 @@ exports.createPost = (request, response) => {
     const newPost = {
         body: request.body.body,
         userHandle: request.user.handle,
-        recievedBy: new Date().toISOString()
+        recievedAt: new Date().toISOString()
     };
 
     db.collection('posts').add(newPost)

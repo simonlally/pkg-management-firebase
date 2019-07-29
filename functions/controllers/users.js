@@ -9,7 +9,8 @@ exports.signup = (request, response) => {
         email: request.body.email,
         password: request.body.password,
         confirmPassword: request.body.confirmPassword,
-        handle: request.body.handle,
+        handle: request.body.handle,    
+        isStaff: request.body.isStaff,
     };
 
     // validation
@@ -57,8 +58,9 @@ exports.signup = (request, response) => {
             const userCredentials = {
                 handle: newUser.handle,
                 email: newUser.email,
-                recievedBy: new Date().toISOString(),
-                userId
+                receivedAt: new Date().toISOString(),
+                userId,
+                isStaff: newUser.isStaff, 
             };
             return db.doc(`/users/${newUser.handle}`).set(userCredentials);
         })
@@ -73,6 +75,24 @@ exports.signup = (request, response) => {
                 return response.status(500).json({ error: err.code });
               }
         });
+}
+
+exports.isStaff = (request, response) => {
+    db.collection('users').get()
+        .then((data) => {
+            let users = [];
+
+            data.forEach((doc => {
+                users.push({
+                    userId: doc.id,
+                    userHandle: doc.data().userHandle,
+                    isStaff: doc.data().isStaff,
+                    email: doc.data().email,
+                });
+            }));
+            return response.json(users);
+        })
+        .catch((err) => console.log(err));
 }
 
 exports.login = (request, response) => {

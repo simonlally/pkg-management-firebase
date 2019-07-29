@@ -11,7 +11,7 @@ exports.getAllPackages = (request, response) => {
                     pickedUp: doc.data().pickedUp,
                     recipient: doc.data().recipient,
                     recieved: doc.data().received,
-                    receivedBy: doc.data().receivedBy,
+                    receivedAt: doc.data().receivedAt,
                 });
             });
             return response.json(packages);
