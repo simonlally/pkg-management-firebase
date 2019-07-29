@@ -78,11 +78,6 @@ exports.signup = (request, response) => {
 exports.login = (request, response) => {
     cors(request, response, () => {
 
-    
-    console.log("REQUEST *****")
-    console.log(request.body.email);
-    console.log("REQUEST HEADER")
-    console.log(JSON.stringify(request.headers));
     const user = {
         email: request.body.email,
         password: request.body.password
@@ -119,6 +114,25 @@ exports.login = (request, response) => {
             }
         })
     })//end cors
+
+}
+
+exports.signout = (request, response) => {
+    cors(request, response, () => {
+        console.log(request);
+        firebase.auth().signOut().then(function() {
+            console.log('Signed Out');
+            return response.status(200).json({message: 'kewl beans'});
+          }, function(error) {
+            console.error('Sign Out Error', error);
+            return response.status(418);
+          });
+    })//end cors
+
+}
+
+exports.testing = () => {
+    console.log("yay");
 }
 
 // helper functions
