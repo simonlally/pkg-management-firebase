@@ -1,4 +1,5 @@
 const { db } = require('../config/admin');
+const cors = require('cors')({origin: true});
 
 exports.getAllPackages = (request, response) => {
     db.collection('packages').get()
@@ -20,20 +21,29 @@ exports.getAllPackages = (request, response) => {
 }
 
 exports.newPackage = (request, response) => {
-    const newPost = {
-        body: request.body.body,
-        userHandle: request.user.handle,
-        recievedAt: new Date().toISOString()
-    };
+            cors(request, response, () => {
+                const newPackage = {
+                    tenantName: request.body.tenantName,
+                    packageDescription: request.body.packageDescription,
+                    staffName: request.body.staffName,
+                    recievedAt: new Date().toISOString(),
+                    isPickedUp: false,
+                };
+                console.log("NEW PACKAGE");
+                console.log(newPackage);
+            
+                db.collection('packages').add(newPackage)
+                    .then((doc) => {
+                        response.status(201).json( { message: `document ${doc.id} created successfully`});
+                    })
+                    .catch((err) => {
+                        response.status(500).json({ error: 'something weng wrong!!!'});
+                        console.error(err);
+                    });
+            })// end cors
+            
 
-    db.collection('packages').add(newPost)
-        .then((doc) => {
-            response.status(201).json( { message: `document ${doc.id} created successfully`});
-        })
-        .catch((err) => {
-            response.status(500).json({ error: 'something weng wrong!!!'});
-            console.error(err);
-        });
+    
 }
 
 exports.deletePackage = (request, response) => {

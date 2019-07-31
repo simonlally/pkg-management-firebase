@@ -139,7 +139,9 @@ exports.login = (request, response) => {
 
 exports.signout = (request, response) => {
     cors(request, response, () => {
-        console.log(request);
+        console.log("RES RES RES RES");
+        console.log(JSON.stringify(request.headers));
+        console.log(request.headers.authorization);
         firebase.auth().signOut().then(function() {
             console.log('Signed Out');
             return response.status(200).json({message: 'kewl beans'});

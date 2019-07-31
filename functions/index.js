@@ -4,20 +4,13 @@ const cors = require('cors');
 const app = express();
 const { db } = require('./config/admin');
 
-const { getAllPosts, createPost, deletePost } = require('./controllers/posts');
-const { getAllPackages } = require('./controllers/packages');
-const { signup, login, signout, isStaff, testing } = require('./controllers/users');
-const fireauth = require('./auth/fireauth');
+const { getAllPackages, newPackage } = require('./controllers/packages');
+const { signup, login, signout, isStaff } = require('./controllers/users');
 
-
+// CORS
 app.use(cors());
 
-app.get('/packages', getAllPackages);
 
-// Post routes
-app.get('/posts', getAllPosts);
-app.post('/post', fireauth, createPost);
-app.delete('/post/:postID', fireauth, deletePost);
 // user routes
 app.post('/signup', signup);
 app.post('/login', login);
@@ -26,10 +19,11 @@ app.post('/login', login);
 app.get('/logout', signout);
 app.get('/isstaff', isStaff);
 
+// package routes
+app.get('/packages', getAllPackages);
+app.post('/newpkg', newPackage)
  
 exports.api = functions.https.onRequest(app);
-exports.test = functions.https.onRequest(testing);
-exports.logout = functions.https.onRequest(signout);
 
 exports.createNotification = functions.firestore.document('users/{userHandle}')
     .onCreate((snapshot)=> {
