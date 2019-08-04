@@ -7,19 +7,50 @@ exports.getAllPackages = (request, response) => {
     .then(data => {
       let packages = [];
 
-      data.forEach(doc => {
+      data.forEach(data => {
         packages.push({
-          packageID: doc.id,
-          isPickedUp: doc.data().isPickedUp,
-          packageDescription: doc.data().packageDescription,
-          receivedAt: doc.data().recievedAt, // not consistent, must fix
-          staffName: doc.data().staffName,
-          tenantName: doc.data().tenantName
+          packageID: data.id,
+          isPickedUp: data.data().isPickedUp,
+          packageDescription: data.data().packageDescription,
+          receivedAt: data.data().recievedAt, // not consistent, must fix
+          staffName: data.data().staffName,
+          tenantName: data.data().tenantName
         });
       });
       return response.json(packages);
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+exports.getTenantPackages = (request, response) => {
+    
+  console.log(JSON.stringify(request.body));
+
+  
+
+
+    db.collection("packages")
+      .where("tenantName", "==", `${request.body.handle}`)
+      .get()
+      .then(data => {
+        let packages = [];
+        data.forEach(package => {
+          packages.push({
+            isPickedUp: package.data().isPickedUp,
+            packageDescription: package.data().packageDescription,
+            receivedAt: package.data().recievedAt, // not consistent, must fix
+            staffName: package.data().staffName,
+            tenantName: package.data().tenantName
+          });
+        });
+        return response.json(packages);
+      })
+      .catch(err => {
+        console.log(":(");
+        console.log(err);
+      })
 };
 
 exports.newPackage = (request, response) => {
@@ -36,10 +67,10 @@ exports.newPackage = (request, response) => {
 
     db.collection("packages")
       .add(newPackage)
-      .then(doc => {
+      .then(data => {
         response
           .status(201)
-          .json({ message: `document ${doc.id} created successfully` });
+          .json({ message: `packageument ${data.id} created successfully` });
       })
       .catch(err => {
         response.status(500).json({ error: "something weng wrong!!!" });
@@ -49,17 +80,17 @@ exports.newPackage = (request, response) => {
 };
 
 exports.deletePackage = (request, response) => {
-  const document = db.doc(`/packages/${request.params.postID}`);
-  document
+  const packageument = db.data(`/packages/${request.params.postID}`);
+  packageument
     .get()
-    .then(doc => {
-      if (!doc.exists) {
+    .then(data => {
+      if (!data.exists) {
         return response.status(404).json({ error: "post not found" });
       }
-      if (doc.data().userHandle !== request.user.handle) {
+      if (data.data().userHandle !== request.user.handle) {
         return response.status(403).json({ error: "unauthorized" });
       } else {
-        return document.delete();
+        return packageument.delete();
       }
     })
     .then(() => {

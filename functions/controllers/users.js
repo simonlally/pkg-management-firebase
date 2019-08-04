@@ -82,6 +82,28 @@ exports.signup = (request, response) => {
     });
 };
 
+exports.getAllUsers = (request, response) => {
+    db.collection("users")
+        .get()
+        .then(data => {
+            let users = [];
+
+            data.forEach(doc => {
+                users.push({
+                    userId: doc.id,
+                    tenantName: doc.data().userHandle,
+                    email: doc.data().email,
+                })
+            })
+            return response.json(users);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        
+        
+}
+
 exports.isStaff = (request, response) => {
   db.collection("users")
     .get()
@@ -93,7 +115,7 @@ exports.isStaff = (request, response) => {
           userId: doc.id,
           userHandle: doc.data().userHandle,
           isStaff: doc.data().isStaff,
-          email: doc.data().email
+          email: doc.data().email,
         });
       });
       return response.json(users);
@@ -164,9 +186,7 @@ exports.signout = (request, response) => {
   }); //end cors
 };
 
-exports.testing = () => {
-  console.log("yay");
-};
+
 
 // helper functions
 const isEmailValid = email => {
