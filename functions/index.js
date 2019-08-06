@@ -8,7 +8,9 @@ app.use(cors());
 const {
   getAllPackages,
   newPackage,
-  getTenantPackages
+  getTenantPackages,
+  updateStatus,
+  getPackageById
 } = require("./controllers/packages");
 
 const {
@@ -29,8 +31,11 @@ app.get("/getallusers", getAllUsers);
 
 // package routes
 app.get("/packages", getAllPackages);
+
 app.post("/newpkg", newPackage);
 app.post("/getpackages", getTenantPackages);
+app.post("/updatestatus", updateStatus);
+app.post("/getpackagebyid", getPackageById);
 
 exports.api = functions.https.onRequest(app);
 
@@ -46,7 +51,6 @@ exports.createNotification = functions.firestore
             recipient: doc.data().userHandle,
             sender: snapshot.data().userHandle,
             read: false,
-            postID: doc.id
           });
         }
       })
