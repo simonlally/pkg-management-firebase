@@ -10,7 +10,8 @@ const {
   newPackage,
   getTenantPackages,
   updateStatus,
-  getPackageById
+  getPackageById,
+  deletePackage
 } = require("./controllers/packages");
 
 const {
@@ -36,6 +37,7 @@ app.post("/newpkg", newPackage);
 app.post("/getpackages", getTenantPackages);
 app.post("/updatestatus", updateStatus);
 app.post("/getpackagebyid", getPackageById);
+app.post("/delete", deletePackage)
 
 exports.api = functions.https.onRequest(app);
 

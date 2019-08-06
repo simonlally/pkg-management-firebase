@@ -100,7 +100,7 @@ exports.updateStatus = (request, response) => {
       isPickedUp: packageData.isPickedUp
     })
     .then(res => {
-      return response.status(201).json(res);
+      return response.status(200).json(res);
     })
     .catch(err => {
       console.log(err);
@@ -108,23 +108,27 @@ exports.updateStatus = (request, response) => {
 };
 
 exports.deletePackage = (request, response) => {
-  const packageument = db.data(`/packages/${request.params.postID}`);
-  packageument
-    .get()
-    .then(data => {
-      if (!data.exists) {
-        return response.status(404).json({ error: "post not found" });
-      }
-      if (data.data().userHandle !== request.user.handle) {
-        return response.status(403).json({ error: "unauthorized" });
-      } else {
-        return packageument.delete();
-      }
-    })
-    .then(() => {
-      response.json({ message: "post successfuly deleted" });
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  cors(request, response, () => {
+    const pId = request.body.packageId;
+
+    const document = db.doc(`/packages/${pId}`);
+    document
+      .get()
+      .then((doc) => {
+        if (!doc.exists) {
+          return res.status(404).json({ error: 'package not found'});
+        }
+        return document.delete();
+      })
+      .then(() => {
+        response.json({
+          message: "package deleted successfully"
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json({err: err.code});
+      })
+
+  })// end cors
 };
