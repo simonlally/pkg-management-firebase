@@ -9,12 +9,12 @@ exports.getAllPackages = (request, response) => {
 
       data.forEach(data => {
         packages.push({
-          packageID: data.id,
           isPickedUp: data.data().isPickedUp,
           packageDescription: data.data().packageDescription,
           receivedAt: data.data().recievedAt, // not consistent, must fix
           staffName: data.data().staffName,
-          tenantName: data.data().tenantName
+          tenantName: data.data().tenantName,
+          packageId: data.id,
         });
       });
       return response.json(packages);
@@ -25,11 +25,6 @@ exports.getAllPackages = (request, response) => {
 };
 
 exports.getTenantPackages = (request, response) => {
-    
-  console.log(JSON.stringify(request.body));
-
-  
-
 
     db.collection("packages")
       .where("tenantName", "==", `${request.body.handle}`)
@@ -42,7 +37,8 @@ exports.getTenantPackages = (request, response) => {
             packageDescription: package.data().packageDescription,
             receivedAt: package.data().recievedAt, // not consistent, must fix
             staffName: package.data().staffName,
-            tenantName: package.data().tenantName
+            tenantName: package.data().tenantName,
+            packageId: package.id,
           });
         });
         return response.json(packages);
