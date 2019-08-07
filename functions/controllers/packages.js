@@ -114,21 +114,20 @@ exports.deletePackage = (request, response) => {
     const document = db.doc(`/packages/${pId}`);
     document
       .get()
-      .then((doc) => {
+      .then(doc => {
         if (!doc.exists) {
-          return res.status(404).json({ error: 'package not found'});
+          return res.status(404).json({ error: "package not found" });
         }
         return document.delete();
       })
       .then(() => {
         response.json({
           message: "package deleted successfully"
-        })
+        });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
-        return res.status(500).json({err: err.code});
-      })
-
-  })// end cors
+        return res.status(500).json({ err: err.code });
+      });
+  }); // end cors
 };
