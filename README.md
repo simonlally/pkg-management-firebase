@@ -1,6 +1,6 @@
 #Package Management System API
 
-API that serves user and package data to a Firebase databse.
+Serverless API using Firebase functions
 
 ### Backend Technologies
 - Node.js
